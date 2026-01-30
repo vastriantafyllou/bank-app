@@ -21,6 +21,9 @@ public class Account {
     @Column(unique = true, nullable = false)
     private String iban;
 
+    @Column(unique = true)
+    private String accountNumber;
+
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balance;
 

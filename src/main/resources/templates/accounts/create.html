@@ -24,6 +24,18 @@
                             <div class="form-text">Εισάγετε τουλάχιστον 5 χαρακτήρες</div>
                         </div>
 
+                        <div class="mb-3">
+                            <label for="accountNumber" class="form-label">Account Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                                <input type="text" class="form-control" id="accountNumber" th:field="*{accountNumber}"
+                                       th:classappend="${#fields.hasErrors('accountNumber')} ? 'is-invalid' : ''"
+                                       placeholder="π.χ. 00012345">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></div>
+                            </div>
+                            <div class="form-text">Εισάγετε τουλάχιστον 5 χαρακτήρες</div>
+                        </div>
+
                         <div class="mb-4">
                             <label for="balance" class="form-label">Αρχικό Υπόλοιπο (€)</label>
                             <div class="input-group">

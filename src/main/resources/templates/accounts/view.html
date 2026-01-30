@@ -29,6 +29,10 @@
                         <small class="text-muted">IBAN</small>
                         <h5 th:text="${account.iban}"></h5>
                     </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Account Number</small>
+                        <h6 th:text="${account.accountNumber}"></h6>
+                    </div>
                     <hr>
                     <div class="mb-3">
                         <small class="text-muted">Τρέχον Υπόλοιπο</small>
@@ -80,8 +84,55 @@
                             </button>
                         </div>
                     </form>
+
+                    <hr>
+
+                    <form th:action="@{/accounts/{iban}/transfer(iban=${account.iban})}" method="post">
+                        <h5 class="text-primary"><i class="bi bi-arrow-left-right me-1"></i>Μεταφορά</h5>
+                        <div class="mb-2">
+                            <input type="text" name="toIban" class="form-control" placeholder="IBAN παραλήπτη" required>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                            <input type="number" step="0.01" min="0.01" name="amount" class="form-control" placeholder="Ποσό μεταφοράς" required>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Μεταφορά
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0"><i class="bi bi-clock-history me-2"></i>Ιστορικό Κινήσεων</h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="p-3" th:if="${#lists.isEmpty(transactions)}">
+                <span class="text-muted">Δεν υπάρχουν κινήσεις.</span>
+            </div>
+            <table class="table table-hover mb-0" th:unless="${#lists.isEmpty(transactions)}">
+                <thead>
+                <tr>
+                    <th>Ημ/νία</th>
+                    <th>Τύπος</th>
+                    <th class="text-end">Ποσό</th>
+                    <th>Αντισυμβαλλόμενος</th>
+                    <th class="text-end">Υπόλοιπο Μετά</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="t : ${transactions}">
+                    <td th:text="${t.createdAt}"></td>
+                    <td th:text="${t.type}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(t.amount, 1, 2)} + ' €'"></td>
+                    <td th:text="${t.counterpartyIban}"></td>
+                    <td class="text-end" th:text="${#numbers.formatDecimal(t.balanceAfter, 1, 2)} + ' €'"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

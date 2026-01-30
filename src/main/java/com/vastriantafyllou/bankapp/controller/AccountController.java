@@ -1,12 +1,16 @@
 package com.vastriantafyllou.bankapp.controller;
 
 import com.vastriantafyllou.bankapp.core.exception.AccountAlreadyExistsException;
+import com.vastriantafyllou.bankapp.core.exception.AccountNumberAlreadyExistsException;
 import com.vastriantafyllou.bankapp.core.exception.AccountNotFoundException;
+import com.vastriantafyllou.bankapp.core.exception.InvalidTransferException;
 import com.vastriantafyllou.bankapp.core.exception.InsufficientBalanceException;
 import com.vastriantafyllou.bankapp.core.exception.NegativeAmountException;
 import com.vastriantafyllou.bankapp.dto.AccountInsertDTO;
 import com.vastriantafyllou.bankapp.dto.AccountReadOnlyDTO;
+import com.vastriantafyllou.bankapp.dto.TransferDTO;
 import com.vastriantafyllou.bankapp.dto.TransactionDTO;
+import com.vastriantafyllou.bankapp.model.AccountTransaction;
 import com.vastriantafyllou.bankapp.service.IAccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +57,9 @@ public class AccountController {
         } catch (AccountAlreadyExistsException e) {
             bindingResult.rejectValue("iban", "error.iban", e.getMessage());
             return "accounts/create";
+        } catch (AccountNumberAlreadyExistsException e) {
+            bindingResult.rejectValue("accountNumber", "error.accountNumber", e.getMessage());
+            return "accounts/create";
         }
     }
 
@@ -60,8 +67,11 @@ public class AccountController {
     public String viewAccount(@PathVariable String iban, Model model, RedirectAttributes redirectAttributes) {
         try {
             AccountReadOnlyDTO account = accountService.getAccountByIban(iban);
+            List<AccountTransaction> transactions = accountService.getTransactionHistory(iban);
             model.addAttribute("account", account);
             model.addAttribute("transactionDTO", new TransactionDTO());
+            model.addAttribute("transferDTO", new TransferDTO());
+            model.addAttribute("transactions", transactions);
             return "accounts/view";
         } catch (AccountNotFoundException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -78,6 +88,8 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             try {
                 model.addAttribute("account", accountService.getAccountByIban(iban));
+                model.addAttribute("transferDTO", new TransferDTO());
+                model.addAttribute("transactions", accountService.getTransactionHistory(iban));
             } catch (AccountNotFoundException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
                 return "redirect:/accounts";
@@ -94,6 +106,33 @@ public class AccountController {
         return "redirect:/accounts/" + iban;
     }
 
+    @PostMapping("/{iban}/transfer")
+    public String transfer(@PathVariable String iban,
+                           @Valid @ModelAttribute("transferDTO") TransferDTO dto,
+                           BindingResult bindingResult,
+                           Model model,
+                           RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            try {
+                model.addAttribute("account", accountService.getAccountByIban(iban));
+                model.addAttribute("transactionDTO", new TransactionDTO());
+                model.addAttribute("transactions", accountService.getTransactionHistory(iban));
+            } catch (AccountNotFoundException e) {
+                redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+                return "redirect:/accounts";
+            }
+            return "accounts/view";
+        }
+
+        try {
+            accountService.transfer(iban, dto.getToIban(), dto.getAmount());
+            redirectAttributes.addFlashAttribute("successMessage", "Η μεταφορά ολοκληρώθηκε επιτυχώς!");
+        } catch (AccountNotFoundException | NegativeAmountException | InsufficientBalanceException | InvalidTransferException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/accounts/" + iban;
+    }
+
     @PostMapping("/{iban}/withdraw")
     public String withdraw(@PathVariable String iban,
                            @Valid @ModelAttribute("transactionDTO") TransactionDTO dto,
@@ -103,6 +142,8 @@ public class AccountController {
         if (bindingResult.hasErrors()) {
             try {
                 model.addAttribute("account", accountService.getAccountByIban(iban));
+                model.addAttribute("transferDTO", new TransferDTO());
+                model.addAttribute("transactions", accountService.getTransactionHistory(iban));
             } catch (AccountNotFoundException e) {
                 redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
                 return "redirect:/accounts";

@@ -12,11 +12,12 @@ public class Mapper {
     public static Account mapToEntity(AccountInsertDTO dto) {
         return Account.builder()
                 .iban(dto.getIban())
+                .accountNumber(dto.getAccountNumber())
                 .balance(dto.getBalance())
                 .build();
     }
 
     public static AccountReadOnlyDTO mapToReadOnlyDTO(Account account) {
-        return new AccountReadOnlyDTO(account.getId(), account.getIban(), account.getBalance());
+        return new AccountReadOnlyDTO(account.getId(), account.getIban(), account.getAccountNumber(), account.getBalance());
     }
 }

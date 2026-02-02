@@ -1,4 +1,4 @@
-package com.vastriantafyllou.bankapp.model;
+package com.vastriantafyllou.bankapp.core.enums;
 
 public enum TransactionType {
     DEPOSIT,

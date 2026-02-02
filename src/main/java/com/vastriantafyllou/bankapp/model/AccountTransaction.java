@@ -1,5 +1,6 @@
 package com.vastriantafyllou.bankapp.model;
 
+import com.vastriantafyllou.bankapp.core.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 

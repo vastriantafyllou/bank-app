@@ -14,13 +14,13 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface IAccountService {
-    AccountReadOnlyDTO createAccount(AccountInsertDTO dto) throws AccountAlreadyExistsException, AccountNumberAlreadyExistsException;
-    void deposit(String iban, BigDecimal amount) throws NegativeAmountException, AccountNotFoundException;
-    void withdraw(String iban, BigDecimal amount) throws NegativeAmountException, AccountNotFoundException, InsufficientBalanceException;
-    void transfer(String fromIban, String toIban, BigDecimal amount) throws NegativeAmountException, AccountNotFoundException, InsufficientBalanceException, InvalidTransferException;
-    BigDecimal getBalance(String iban) throws AccountNotFoundException;
-    List<AccountReadOnlyDTO> getAllAccounts();
-    AccountReadOnlyDTO getAccountByIban(String iban) throws AccountNotFoundException;
-    List<AccountTransaction> getTransactionHistory(String iban) throws AccountNotFoundException;
-    void deleteAccount(String iban) throws AccountNotFoundException;
+    AccountReadOnlyDTO createAccount(AccountInsertDTO dto, String username) throws AccountAlreadyExistsException, AccountNumberAlreadyExistsException;
+    void deposit(String iban, BigDecimal amount, String username, boolean isAdmin) throws NegativeAmountException, AccountNotFoundException;
+    void withdraw(String iban, BigDecimal amount, String username, boolean isAdmin) throws NegativeAmountException, AccountNotFoundException, InsufficientBalanceException;
+    void transfer(String fromIban, String toIban, BigDecimal amount, String username, boolean isAdmin) throws NegativeAmountException, AccountNotFoundException, InsufficientBalanceException, InvalidTransferException;
+    BigDecimal getBalance(String iban, String username, boolean isAdmin) throws AccountNotFoundException;
+    List<AccountReadOnlyDTO> getAllAccounts(String username, boolean isAdmin);
+    AccountReadOnlyDTO getAccountByIban(String iban, String username, boolean isAdmin) throws AccountNotFoundException;
+    List<AccountTransaction> getTransactionHistory(String iban, String username, boolean isAdmin) throws AccountNotFoundException;
+    void deleteAccount(String iban, String username, boolean isAdmin) throws AccountNotFoundException;
 }

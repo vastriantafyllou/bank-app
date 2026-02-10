@@ -47,15 +47,37 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
+                    <li class="nav-item" th:if="${isAuthenticated}">
                         <a class="nav-link" th:href="@{/accounts}">
                             <i class="bi bi-list-ul me-1"></i>Λογαριασμοί
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" th:if="${isAuthenticated}">
                         <a class="nav-link" th:href="@{/accounts/new}">
                             <i class="bi bi-plus-circle me-1"></i>Νέος Λογαριασμός
                         </a>
+                    </li>
+
+                    <li class="nav-item" th:if="${!isAuthenticated}">
+                        <a class="nav-link" th:href="@{/login}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Σύνδεση
+                        </a>
+                    </li>
+
+                    <li class="nav-item" th:if="${!isAuthenticated}">
+                        <a class="nav-link" th:href="@{/register}">
+                            <i class="bi bi-person-plus me-1"></i>Εγγραφή
+                        </a>
+                    </li>
+
+                    <li class="nav-item d-flex align-items-center" th:if="${isAuthenticated}">
+                        <span class="navbar-text text-white me-2" th:text="${currentUsername}"></span>
+                        <form th:action="@{/logout}" method="post" class="d-inline">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn btn-sm btn-outline-light">
+                                <i class="bi bi-box-arrow-right me-1"></i>Έξοδος
+                            </button>
+                        </form>
                     </li>
                 </ul>
             </div>

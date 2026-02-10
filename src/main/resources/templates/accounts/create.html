@@ -11,6 +11,7 @@
                 </div>
                 <div class="card-body">
                     <form th:action="@{/accounts/new}" th:object="${accountDTO}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         
                         <div class="mb-3">
                             <label for="iban" class="form-label">IBAN</label>

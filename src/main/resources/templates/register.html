@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i>Εγγραφή</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/register}" th:object="${registerDTO}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="username" th:field="*{username}"
+                                       th:classappend="${#fields.hasErrors('username')} ? 'is-invalid' : ''"
+                                       autocomplete="username" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <input type="password" class="form-control" id="password" th:field="*{password}"
+                                       th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                                       autocomplete="new-password" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="confirmPassword" class="form-label">Επιβεβαίωση Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}"
+                                       th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
+                                       autocomplete="new-password" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>Δημιουργία Λογαριασμού
+                            </button>
+                            <a th:href="@{/login}" class="btn btn-outline-secondary">
+                                <i class="bi bi-shield-lock me-1"></i>Έχω ήδη λογαριασμό
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body py-5 text-center">
+                    <i class="bi bi-bank2 display-1 text-primary"></i>
+                    <h2 class="mt-3">Καλώς ήρθατε στο BankApp</h2>
+                    <p class="text-muted mt-2 mb-4">
+                        Διαχείριση λογαριασμών, καταθέσεις, αναλήψεις και μεταφορές.
+                    </p>
+
+                    <div th:if="${!isAuthenticated}">
+                        <div class="d-flex justify-content-center gap-2 flex-wrap">
+                            <a th:href="@{/login}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-shield-lock me-1"></i>Σύνδεση
+                            </a>
+                            <a th:href="@{/register}" class="btn btn-outline-primary btn-lg">
+                                <i class="bi bi-person-plus me-1"></i>Εγγραφή
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:if="${isAuthenticated}">
+                        <a th:href="@{/accounts}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-wallet2 me-1"></i>Μετάβαση στους Λογαριασμούς
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

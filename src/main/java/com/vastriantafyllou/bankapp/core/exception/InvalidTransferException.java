@@ -1,6 +1,6 @@
 package com.vastriantafyllou.bankapp.core.exception;
 
-public class InvalidTransferException extends Exception {
+public class InvalidTransferException extends RuntimeException {
 
     public InvalidTransferException(String message) {
         super(message);

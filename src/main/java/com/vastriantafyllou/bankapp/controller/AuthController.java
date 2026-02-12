@@ -42,10 +42,10 @@ public class AuthController {
 
         try {
             userService.register(dto);
-            return "redirect:/login?registered";
         } catch (UsernameAlreadyExistsException e) {
             bindingResult.rejectValue("username", "error.username", e.getMessage());
             return "register";
         }
+        return "redirect:/login?registered";
     }
 }

@@ -2,10 +2,6 @@ package com.vastriantafyllou.bankapp.controller;
 
 import com.vastriantafyllou.bankapp.core.exception.AccountAlreadyExistsException;
 import com.vastriantafyllou.bankapp.core.exception.AccountNumberAlreadyExistsException;
-import com.vastriantafyllou.bankapp.core.exception.AccountNotFoundException;
-import com.vastriantafyllou.bankapp.core.exception.InvalidTransferException;
-import com.vastriantafyllou.bankapp.core.exception.InsufficientBalanceException;
-import com.vastriantafyllou.bankapp.core.exception.NegativeAmountException;
 import com.vastriantafyllou.bankapp.dto.AccountInsertDTO;
 import com.vastriantafyllou.bankapp.dto.AccountReadOnlyDTO;
 import com.vastriantafyllou.bankapp.dto.TransferDTO;
@@ -73,21 +69,16 @@ public class AccountController {
     }
 
     @GetMapping("/{iban}")
-    public String viewAccount(@PathVariable String iban, Authentication authentication, Model model, RedirectAttributes redirectAttributes) {
-        try {
-            String username = authentication.getName();
-            boolean admin = isAdmin(authentication);
-            AccountReadOnlyDTO account = accountService.getAccountByIban(iban, username, admin);
-            List<AccountTransaction> transactions = accountService.getTransactionHistory(iban, username, admin);
-            model.addAttribute("account", account);
-            model.addAttribute("transactionDTO", new TransactionDTO());
-            model.addAttribute("transferDTO", new TransferDTO());
-            model.addAttribute("transactions", transactions);
-            return "accounts/view";
-        } catch (AccountNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            return "redirect:/accounts";
-        }
+    public String viewAccount(@PathVariable String iban, Authentication authentication, Model model) {
+        String username = authentication.getName();
+        boolean admin = isAdmin(authentication);
+        AccountReadOnlyDTO account = accountService.getAccountByIban(iban, username, admin);
+        List<AccountTransaction> transactions = accountService.getTransactionHistory(iban, username, admin);
+        model.addAttribute("account", account);
+        model.addAttribute("transactionDTO", new TransactionDTO());
+        model.addAttribute("transferDTO", new TransferDTO());
+        model.addAttribute("transactions", transactions);
+        return "accounts/view";
     }
 
     @PostMapping("/{iban}/deposit")
@@ -98,25 +89,16 @@ public class AccountController {
                           Model model,
                           RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            try {
-                String username = authentication.getName();
-                boolean admin = isAdmin(authentication);
-                model.addAttribute("account", accountService.getAccountByIban(iban, username, admin));
-                model.addAttribute("transferDTO", new TransferDTO());
-                model.addAttribute("transactions", accountService.getTransactionHistory(iban, username, admin));
-            } catch (AccountNotFoundException e) {
-                redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-                return "redirect:/accounts";
-            }
+            String username = authentication.getName();
+            boolean admin = isAdmin(authentication);
+            model.addAttribute("account", accountService.getAccountByIban(iban, username, admin));
+            model.addAttribute("transferDTO", new TransferDTO());
+            model.addAttribute("transactions", accountService.getTransactionHistory(iban, username, admin));
             return "accounts/view";
         }
 
-        try {
-            accountService.deposit(iban, dto.getAmount(), authentication.getName(), isAdmin(authentication));
-            redirectAttributes.addFlashAttribute("successMessage", "Η κατάθεση ολοκληρώθηκε επιτυχώς!");
-        } catch (AccountNotFoundException | NegativeAmountException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+        accountService.deposit(iban, dto.getAmount(), authentication.getName(), isAdmin(authentication));
+        redirectAttributes.addFlashAttribute("successMessage", "Η κατάθεση ολοκληρώθηκε επιτυχώς!");
         return "redirect:/accounts/" + iban;
     }
 
@@ -128,25 +110,16 @@ public class AccountController {
                            Model model,
                            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            try {
-                String username = authentication.getName();
-                boolean admin = isAdmin(authentication);
-                model.addAttribute("account", accountService.getAccountByIban(iban, username, admin));
-                model.addAttribute("transactionDTO", new TransactionDTO());
-                model.addAttribute("transactions", accountService.getTransactionHistory(iban, username, admin));
-            } catch (AccountNotFoundException e) {
-                redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-                return "redirect:/accounts";
-            }
+            String username = authentication.getName();
+            boolean admin = isAdmin(authentication);
+            model.addAttribute("account", accountService.getAccountByIban(iban, username, admin));
+            model.addAttribute("transactionDTO", new TransactionDTO());
+            model.addAttribute("transactions", accountService.getTransactionHistory(iban, username, admin));
             return "accounts/view";
         }
 
-        try {
-            accountService.transfer(iban, dto.getToIban(), dto.getAmount(), authentication.getName(), isAdmin(authentication));
-            redirectAttributes.addFlashAttribute("successMessage", "Η μεταφορά ολοκληρώθηκε επιτυχώς!");
-        } catch (AccountNotFoundException | NegativeAmountException | InsufficientBalanceException | InvalidTransferException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+        accountService.transfer(iban, dto.getToIban(), dto.getAmount(), authentication.getName(), isAdmin(authentication));
+        redirectAttributes.addFlashAttribute("successMessage", "Η μεταφορά ολοκληρώθηκε επιτυχώς!");
         return "redirect:/accounts/" + iban;
     }
 
@@ -158,36 +131,23 @@ public class AccountController {
                            Model model,
                            RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            try {
-                String username = authentication.getName();
-                boolean admin = isAdmin(authentication);
-                model.addAttribute("account", accountService.getAccountByIban(iban, username, admin));
-                model.addAttribute("transferDTO", new TransferDTO());
-                model.addAttribute("transactions", accountService.getTransactionHistory(iban, username, admin));
-            } catch (AccountNotFoundException e) {
-                redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-                return "redirect:/accounts";
-            }
+            String username = authentication.getName();
+            boolean admin = isAdmin(authentication);
+            model.addAttribute("account", accountService.getAccountByIban(iban, username, admin));
+            model.addAttribute("transferDTO", new TransferDTO());
+            model.addAttribute("transactions", accountService.getTransactionHistory(iban, username, admin));
             return "accounts/view";
         }
 
-        try {
-            accountService.withdraw(iban, dto.getAmount(), authentication.getName(), isAdmin(authentication));
-            redirectAttributes.addFlashAttribute("successMessage", "Η ανάληψη ολοκληρώθηκε επιτυχώς!");
-        } catch (AccountNotFoundException | NegativeAmountException | InsufficientBalanceException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+        accountService.withdraw(iban, dto.getAmount(), authentication.getName(), isAdmin(authentication));
+        redirectAttributes.addFlashAttribute("successMessage", "Η ανάληψη ολοκληρώθηκε επιτυχώς!");
         return "redirect:/accounts/" + iban;
     }
 
     @PostMapping("/{iban}/delete")
     public String deleteAccount(@PathVariable String iban, Authentication authentication, RedirectAttributes redirectAttributes) {
-        try {
-            accountService.deleteAccount(iban, authentication.getName(), isAdmin(authentication));
-            redirectAttributes.addFlashAttribute("successMessage", "Ο λογαριασμός διαγράφηκε επιτυχώς!");
-        } catch (AccountNotFoundException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
+        accountService.deleteAccount(iban, authentication.getName(), isAdmin(authentication));
+        redirectAttributes.addFlashAttribute("successMessage", "Ο λογαριασμός διαγράφηκε επιτυχώς!");
         return "redirect:/accounts";
     }
 }

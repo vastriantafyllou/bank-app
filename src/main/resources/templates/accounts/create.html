@@ -19,10 +19,10 @@
                                 <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
                                 <input type="text" class="form-control" id="iban" th:field="*{iban}"
                                        th:classappend="${#fields.hasErrors('iban')} ? 'is-invalid' : ''"
-                                       placeholder="π.χ. GR1234567890">
+                                       placeholder="π.χ. GR1234567890123456789012345" maxlength="27">
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('iban')}" th:errors="*{iban}"></div>
                             </div>
-                            <div class="form-text">Εισάγετε τουλάχιστον 5 χαρακτήρες</div>
+                            <div class="form-text">GR + 25 αριθμοί (σύνολο 27 χαρακτήρες)</div>
                         </div>
 
                         <div class="mb-3">
@@ -31,10 +31,10 @@
                                 <span class="input-group-text"><i class="bi bi-hash"></i></span>
                                 <input type="text" class="form-control" id="accountNumber" th:field="*{accountNumber}"
                                        th:classappend="${#fields.hasErrors('accountNumber')} ? 'is-invalid' : ''"
-                                       placeholder="π.χ. 00012345">
+                                       placeholder="π.χ. 12345678901234567890" maxlength="20">
                                 <div class="invalid-feedback" th:if="${#fields.hasErrors('accountNumber')}" th:errors="*{accountNumber}"></div>
                             </div>
-                            <div class="form-text">Εισάγετε τουλάχιστον 5 χαρακτήρες</div>
+                            <div class="form-text">Ακριβώς 20 αριθμοί</div>
                         </div>
 
                         <div class="mb-4">

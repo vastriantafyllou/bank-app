@@ -18,11 +18,11 @@ import java.math.BigDecimal;
 public class AccountInsertDTO {
 
     @NotBlank(message = "Το IBAN είναι υποχρεωτικό")
-    @Pattern(regexp = "^GR\\d{15}$", message = "Το IBAN πρέπει να ξεκινάει με GR και να ακολουθούν 15 αριθμοί")
+    @Pattern(regexp = "^GR\\d{25}$", message = "Το IBAN πρέπει να ξεκινάει με GR και να ακολουθούν 25 αριθμοί (σύνολο 27 χαρακτήρες)")
     private String iban;
 
     @NotBlank(message = "Το Account Number είναι υποχρεωτικό")
-    @Pattern(regexp = "^\\d{10}$", message = "Το Account Number πρέπει να είναι ακριβώς 10 αριθμοί")
+    @Pattern(regexp = "^\\d{20}$", message = "Το Account Number πρέπει να είναι ακριβώς 20 αριθμοί")
     private String accountNumber;
 
     @NotNull(message = "Το αρχικό υπόλοιπο είναι υποχρεωτικό")

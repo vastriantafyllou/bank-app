@@ -40,7 +40,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional
-    public AccountReadOnlyDTO createAccount(AccountInsertDTO dto, String username) throws AccountAlreadyExistsException, AccountNumberAlreadyExistsException {
+    public AccountReadOnlyDTO createAccount(AccountInsertDTO dto, String username) {
         if (accountRepository.existsByIban(dto.getIban())) {
             throw new AccountAlreadyExistsException("Ο λογαριασμός με IBAN " + dto.getIban() + " υπάρχει ήδη");
         }
@@ -55,7 +55,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional
-    public void deposit(String iban, BigDecimal amount, String username, boolean isAdmin) throws NegativeAmountException, AccountNotFoundException {
+    public void deposit(String iban, BigDecimal amount, String username, boolean isAdmin) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new NegativeAmountException("Το ποσό κατάθεσης πρέπει να είναι θετικό");
         }
@@ -79,7 +79,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional
-    public void withdraw(String iban, BigDecimal amount, String username, boolean isAdmin) throws NegativeAmountException, AccountNotFoundException, InsufficientBalanceException {
+    public void withdraw(String iban, BigDecimal amount, String username, boolean isAdmin) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new NegativeAmountException("Το ποσό ανάληψης πρέπει να είναι θετικό");
         }
@@ -107,7 +107,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional
-    public void transfer(String fromIban, String toIban, BigDecimal amount, String username, boolean isAdmin) throws NegativeAmountException, AccountNotFoundException, InsufficientBalanceException, InvalidTransferException {
+    public void transfer(String fromIban, String toIban, BigDecimal amount, String username, boolean isAdmin) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new NegativeAmountException("Το ποσό μεταφοράς πρέπει να είναι θετικό");
         }
@@ -166,7 +166,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public BigDecimal getBalance(String iban, String username, boolean isAdmin) throws AccountNotFoundException {
+    public BigDecimal getBalance(String iban, String username, boolean isAdmin) {
         Account account = (isAdmin
                 ? accountRepository.findByIban(iban)
                 : accountRepository.findByIbanAndOwner_Username(iban, username))
@@ -185,7 +185,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public AccountReadOnlyDTO getAccountByIban(String iban, String username, boolean isAdmin) throws AccountNotFoundException {
+    public AccountReadOnlyDTO getAccountByIban(String iban, String username, boolean isAdmin) {
         Account account = (isAdmin
                 ? accountRepository.findByIban(iban)
                 : accountRepository.findByIbanAndOwner_Username(iban, username))
@@ -195,7 +195,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AccountTransaction> getTransactionHistory(String iban, String username, boolean isAdmin) throws AccountNotFoundException {
+    public List<AccountTransaction> getTransactionHistory(String iban, String username, boolean isAdmin) {
         boolean exists = isAdmin
                 ? accountRepository.existsByIban(iban)
                 : accountRepository.existsByIbanAndOwner_Username(iban, username);
@@ -207,7 +207,7 @@ public class AccountServiceImpl implements IAccountService {
 
     @Override
     @Transactional
-    public void deleteAccount(String iban, String username, boolean isAdmin) throws AccountNotFoundException {
+    public void deleteAccount(String iban, String username, boolean isAdmin) {
         Account account = (isAdmin
                 ? accountRepository.findByIban(iban)
                 : accountRepository.findByIbanAndOwner_Username(iban, username))

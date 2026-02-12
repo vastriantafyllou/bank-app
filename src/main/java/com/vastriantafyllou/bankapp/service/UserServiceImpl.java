@@ -19,7 +19,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public AppUser register(RegisterDTO dto) throws UsernameAlreadyExistsException {
+    public AppUser register(RegisterDTO dto) {
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new UsernameAlreadyExistsException("Το username είναι ήδη σε χρήση");
         }

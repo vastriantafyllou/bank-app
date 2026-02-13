@@ -26,6 +26,18 @@ public class GlobalExceptionHandler {
         return "redirect:/accounts";
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public String handleUserNotFound(UserNotFoundException e, HttpServletRequest request) {
+        addFlashError(request, e.getMessage());
+        return "redirect:/";
+    }
+
+    @ExceptionHandler(WrongPasswordException.class)
+    public String handleWrongPassword(WrongPasswordException e, HttpServletRequest request) {
+        addFlashError(request, e.getMessage());
+        return "redirect:/profile";
+    }
+
     @ExceptionHandler(Exception.class)
     public String handleGenericError(Exception e, HttpServletRequest request) {
         addFlashError(request, "Παρουσιάστηκε ένα απρόσμενο σφάλμα.");

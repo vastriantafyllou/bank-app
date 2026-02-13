@@ -4,6 +4,7 @@ import com.vastriantafyllou.bankapp.core.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +26,31 @@ public class AppUser {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(length = 64)
+    private String firstName;
+
+    @Column(length = 64)
+    private String lastName;
+
+    @Column(length = 128)
+    private String email;
+
+    @Column(length = 20)
+    private String phone;
+
+    @Column(updatable = false)
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
+    private Boolean blocked = false;
+
+    @PrePersist
+    private void prePersist() {
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (blocked == null) blocked = false;
+    }
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "app_user_roles", joinColumns = @JoinColumn(name = "user_id"))

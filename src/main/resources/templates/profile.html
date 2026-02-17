@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h2 class="mb-4"><i class="bi bi-person-circle me-2"></i>Προφίλ Χρήστη</h2>
+
+            <!-- Success Message -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Error Message -->
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Account Info -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Στοιχεία Λογαριασμού</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Username:</strong> <span th:text="${user.username}"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Μέλος από:</strong>
+                                <span th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Profile Form -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Επεξεργασία Προφίλ</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/profile/update}" th:object="${profileDTO}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">Όνομα</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
+                                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid' : ''">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Επώνυμο</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                    <input type="text" class="form-control" id="lastName" th:field="*{lastName}"
+                                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid' : ''">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" th:field="*{email}"
+                                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Τηλέφωνο</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                    <input type="text" class="form-control" id="phone" th:field="*{phone}"
+                                           th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''">
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i>Αποθήκευση Αλλαγών
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Change Password Form -->
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-key me-2"></i>Αλλαγή Password</h5>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/profile/change-password}" th:object="${passwordDTO}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Τρέχον Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" id="currentPassword" th:field="*{currentPassword}"
+                                       th:classappend="${#fields.hasErrors('currentPassword')} ? 'is-invalid' : ''"
+                                       autocomplete="current-password" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Νέο Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <input type="password" class="form-control" id="newPassword" th:field="*{newPassword}"
+                                       th:classappend="${#fields.hasErrors('newPassword')} ? 'is-invalid' : ''"
+                                       autocomplete="new-password" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="confirmNewPassword" class="form-label">Επιβεβαίωση Νέου Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                                <input type="password" class="form-control" id="confirmNewPassword" th:field="*{confirmNewPassword}"
+                                       th:classappend="${#fields.hasErrors('confirmNewPassword')} ? 'is-invalid' : ''"
+                                       autocomplete="new-password" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-shield-lock me-1"></i>Αλλαγή Password
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

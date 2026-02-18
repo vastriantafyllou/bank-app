@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-people me-2"></i>Διαχείριση Χρηστών</h2>
+        <a th:href="@{/admin}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-1"></i>Dashboard
+        </a>
+    </div>
+
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Error Message -->
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Ονοματεπώνυμο</th>
+                        <th>Email</th>
+                        <th>Ρόλοι</th>
+                        <th class="text-center">Λογ/μοί</th>
+                        <th>Εγγραφή</th>
+                        <th class="text-center">Κατάσταση</th>
+                        <th class="text-center">Ενέργειες</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td>
+                            <i class="bi bi-person me-1 text-primary"></i>
+                            <span th:text="${user.username}"></span>
+                        </td>
+                        <td>
+                            <span th:if="${user.firstName != null || user.lastName != null}"
+                                  th:text="${(user.firstName != null ? user.firstName : '') + ' ' + (user.lastName != null ? user.lastName : '')}"></span>
+                            <span th:if="${user.firstName == null && user.lastName == null}" class="text-muted">—</span>
+                        </td>
+                        <td>
+                            <span th:if="${user.email != null}" th:text="${user.email}"></span>
+                            <span th:if="${user.email == null}" class="text-muted">—</span>
+                        </td>
+                        <td>
+                            <span th:each="role : ${user.roles}"
+                                  class="badge me-1"
+                                  th:classappend="${role.name() == 'ADMIN'} ? 'bg-danger' : 'bg-secondary'"
+                                  th:text="${role.name()}"></span>
+                        </td>
+                        <td class="text-center" th:text="${user.accountCount}"></td>
+                        <td th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy')}"></td>
+                        <td class="text-center">
+                            <span th:if="${user.blocked}" class="badge bg-danger">Blocked</span>
+                            <span th:unless="${user.blocked}" class="badge bg-success">Active</span>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                <!-- Block/Unblock -->
+                                <form th:if="${!user.blocked}" th:action="@{/admin/users/{id}/block(id=${user.id})}" method="post" class="d-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Block"
+                                            onclick="return confirm('Σίγουρα θέλετε να αποκλείσετε αυτόν τον χρήστη;')">
+                                        <i class="bi bi-lock"></i>
+                                    </button>
+                                </form>
+                                <form th:if="${user.blocked}" th:action="@{/admin/users/{id}/unblock(id=${user.id})}" method="post" class="d-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <button type="submit" class="btn btn-sm btn-outline-success" title="Unblock">
+                                        <i class="bi bi-unlock"></i>
+                                    </button>
+                                </form>
+
+                                <!-- Assign/Remove ADMIN role -->
+                                <form th:unless="${user.roles.contains(T(com.vastriantafyllou.bankapp.core.enums.Role).ADMIN)}"
+                                      th:action="@{/admin/users/{id}/assign-role(id=${user.id})}" method="post" class="d-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <input type="hidden" name="role" value="ADMIN" />
+                                    <button type="submit" class="btn btn-sm btn-outline-warning" title="Assign ADMIN"
+                                            onclick="return confirm('Σίγουρα θέλετε να δώσετε ρόλο ADMIN;')">
+                                        <i class="bi bi-shield-plus"></i>
+                                    </button>
+                                </form>
+                                <form th:if="${user.roles.contains(T(com.vastriantafyllou.bankapp.core.enums.Role).ADMIN)}"
+                                      th:action="@{/admin/users/{id}/remove-role(id=${user.id})}" method="post" class="d-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <input type="hidden" name="role" value="ADMIN" />
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary" title="Remove ADMIN"
+                                            onclick="return confirm('Σίγουρα θέλετε να αφαιρέσετε τον ρόλο ADMIN;')">
+                                        <i class="bi bi-shield-minus"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

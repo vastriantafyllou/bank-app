@@ -3,33 +3,78 @@
       th:replace="~{layout :: layout(~{::content})}">
 <body>
 <div th:fragment="content">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-body py-5 text-center">
-                    <i class="bi bi-bank2 display-1 text-primary"></i>
-                    <h2 class="mt-3">Καλώς ήρθατε στο BankApp</h2>
-                    <p class="text-muted mt-2 mb-4">
-                        Διαχείριση λογαριασμών, καταθέσεις, αναλήψεις και μεταφορές.
+    <!-- Hero Section -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center">
+            <div class="card" style="border:none; background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #dbeafe 100%);">
+                <div class="card-body py-5 px-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                         style="width:80px; height:80px; background: linear-gradient(135deg, #4f46e5, #818cf8);">
+                        <i class="bi bi-bank2 text-white" style="font-size:2.2rem"></i>
+                    </div>
+                    <h1 class="mt-2 mb-2" style="font-weight:800; letter-spacing:-0.03em; font-size:2.2rem;">
+                        Καλώς ήρθατε στο BankApp
+                    </h1>
+                    <p class="text-muted mx-auto mb-4" style="max-width:420px; font-size:1.05rem;">
+                        Διαχείριση λογαριασμών, καταθέσεις, αναλήψεις και μεταφορές — γρήγορα και με ασφάλεια.
                     </p>
 
                     <div th:if="${!isAuthenticated}">
-                        <div class="d-flex justify-content-center gap-2 flex-wrap">
-                            <a th:href="@{/login}" class="btn btn-primary btn-lg">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a th:href="@{/login}" class="btn btn-primary btn-lg px-4">
                                 <i class="bi bi-shield-lock me-1"></i>Σύνδεση
                             </a>
-                            <a th:href="@{/register}" class="btn btn-outline-primary btn-lg">
+                            <a th:href="@{/register}" class="btn btn-outline-primary btn-lg px-4">
                                 <i class="bi bi-person-plus me-1"></i>Εγγραφή
                             </a>
                         </div>
                     </div>
 
                     <div th:if="${isAuthenticated}">
-                        <a th:href="@{/accounts}" class="btn btn-primary btn-lg">
+                        <a th:href="@{/accounts}" class="btn btn-primary btn-lg px-4">
                             <i class="bi bi-wallet2 me-1"></i>Μετάβαση στους Λογαριασμούς
                         </a>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Feature Cards -->
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card h-100 text-center" style="border:none;">
+                <div class="card-body py-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-3 mb-3"
+                         style="width:56px; height:56px; background:#ecfdf5;">
+                        <i class="bi bi-arrow-down-circle-fill" style="font-size:1.6rem; color:#10b981;"></i>
+                    </div>
+                    <h5 style="font-weight:600;">Καταθέσεις</h5>
+                    <p class="text-muted small mb-0">Κατάθεση χρημάτων σε οποιονδήποτε λογαριασμό σας εύκολα και γρήγορα.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center" style="border:none;">
+                <div class="card-body py-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-3 mb-3"
+                         style="width:56px; height:56px; background:#fef2f2;">
+                        <i class="bi bi-arrow-up-circle-fill" style="font-size:1.6rem; color:#ef4444;"></i>
+                    </div>
+                    <h5 style="font-weight:600;">Αναλήψεις</h5>
+                    <p class="text-muted small mb-0">Ανάληψη χρημάτων με ασφάλεια, ανά πάσα στιγμή.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center" style="border:none;">
+                <div class="card-body py-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-3 mb-3"
+                         style="width:56px; height:56px; background:#eef2ff;">
+                        <i class="bi bi-arrow-left-right" style="font-size:1.6rem; color:#4f46e5;"></i>
+                    </div>
+                    <h5 style="font-weight:600;">Μεταφορές</h5>
+                    <p class="text-muted small mb-0">Μεταφορά χρημάτων μεταξύ λογαριασμών με ένα κλικ.</p>
                 </div>
             </div>
         </div>

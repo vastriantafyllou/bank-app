@@ -4,12 +4,18 @@
 <body>
 <div th:fragment="content">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i>Εγγραφή</h4>
+        <div class="col-md-5 col-lg-4">
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                     style="width:64px; height:64px; background: linear-gradient(135deg, #4f46e5, #818cf8);">
+                    <i class="bi bi-person-plus text-white" style="font-size:1.6rem"></i>
                 </div>
-                <div class="card-body">
+                <h3 style="font-weight:700;">Εγγραφή</h3>
+                <p class="text-muted small">Δημιουργήστε τον λογαριασμό σας</p>
+            </div>
+
+            <div class="card" style="border:none;">
+                <div class="card-body p-4">
                     <form th:action="@{/register}" th:object="${registerDTO}" method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
@@ -46,16 +52,25 @@
                             </div>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary py-2">
                                 <i class="bi bi-check-lg me-1"></i>Δημιουργία Λογαριασμού
                             </button>
-                            <a th:href="@{/login}" class="btn btn-outline-secondary">
-                                <i class="bi bi-shield-lock me-1"></i>Έχω ήδη λογαριασμό
-                            </a>
                         </div>
                     </form>
+
+                    <hr class="my-3">
+                    <div class="text-center">
+                        <span class="text-muted small">Έχετε ήδη λογαριασμό;</span>
+                        <a th:href="@{/login}" class="small" style="color:#4f46e5; font-weight:500; text-decoration:none;"> Σύνδεση</a>
+                    </div>
                 </div>
+            </div>
+
+            <div class="text-center mt-3">
+                <a th:href="@{/}" class="text-muted small" style="text-decoration:none;">
+                    <i class="bi bi-arrow-left me-1"></i>Επιστροφή στην Αρχική
+                </a>
             </div>
         </div>
     </div>

@@ -19,31 +19,33 @@
 
     <div class="row">
         <!-- Account Info Card -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-credit-card me-2"></i>Στοιχεία Λογαριασμού</h4>
-                </div>
-                <div class="card-body text-center">
+        <div class="col-lg-5 mb-4">
+            <div class="card h-100" style="border:none;">
+                <div class="card-body text-center p-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
+                         style="width:64px; height:64px; background: linear-gradient(135deg, #4f46e5, #818cf8);">
+                        <i class="bi bi-credit-card text-white" style="font-size:1.5rem"></i>
+                    </div>
+
                     <div class="mb-3">
-                        <small class="text-muted">IBAN</small>
-                        <h5 th:text="${account.iban}"></h5>
+                        <small class="text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">IBAN</small>
+                        <h5 style="font-weight:600;" th:text="${account.iban}"></h5>
                     </div>
                     <div class="mb-3">
-                        <small class="text-muted">Account Number</small>
-                        <h6 th:text="${account.accountNumber}"></h6>
+                        <small class="text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">Account Number</small>
+                        <h6 class="text-muted" th:text="${account.accountNumber}"></h6>
                     </div>
-                    <hr>
-                    <div class="mb-3">
-                        <small class="text-muted">Τρέχον Υπόλοιπο</small>
+
+                    <div class="rounded-3 py-4 px-3 mb-3" style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);">
+                        <small class="text-muted" style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em;">Τρέχον Υπόλοιπο</small>
                         <div class="balance-display" th:classappend="${account.balance >= 0} ? 'text-success' : 'text-danger'"
                              th:text="${#numbers.formatDecimal(account.balance, 1, 2)} + ' €'"></div>
                     </div>
-                    <hr>
-                    <form th:action="@{/accounts/{iban}/delete(iban=${account.iban})}" method="post" 
+
+                    <form th:action="@{/accounts/{iban}/delete(iban=${account.iban})}" method="post"
                           onsubmit="return confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον λογαριασμό;');">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <button type="submit" class="btn btn-outline-danger">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
                             <i class="bi bi-trash me-1"></i>Διαγραφή Λογαριασμού
                         </button>
                     </form>
@@ -52,96 +54,118 @@
         </div>
 
         <!-- Transactions Card -->
-        <div class="col-lg-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Συναλλαγές</h4>
-                </div>
-                <div class="card-body">
-                    <!-- Deposit Form -->
-                    <form th:action="@{/accounts/{iban}/deposit(iban=${account.iban})}" method="post" class="mb-4">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <h5 class="text-success"><i class="bi bi-arrow-down-circle me-1"></i>Κατάθεση</h5>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
-                            <input type="number" step="0.01" min="0.01" name="amount" class="form-control" 
-                                   placeholder="Ποσό κατάθεσης" required>
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check-lg"></i> Κατάθεση
-                            </button>
-                        </div>
-                    </form>
+        <div class="col-lg-7 mb-4">
+            <div class="card h-100" style="border:none;">
+                <div class="card-body p-4">
+                    <h5 class="mb-4" style="font-weight:600;">
+                        <i class="bi bi-arrow-left-right me-2" style="color:#4f46e5;"></i>Συναλλαγές
+                    </h5>
 
-                    <hr>
+                    <!-- Deposit Form -->
+                    <div class="rounded-3 p-3 mb-3" style="background:#ecfdf5;">
+                        <form th:action="@{/accounts/{iban}/deposit(iban=${account.iban})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <label class="form-label" style="font-weight:600; color:#065f46;">
+                                <i class="bi bi-arrow-down-circle me-1"></i>Κατάθεση
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                                <input type="number" step="0.01" min="0.01" name="amount" class="form-control"
+                                       placeholder="Ποσό κατάθεσης" required>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
                     <!-- Withdraw Form -->
-                    <form th:action="@{/accounts/{iban}/withdraw(iban=${account.iban})}" method="post">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <h5 class="text-danger"><i class="bi bi-arrow-up-circle me-1"></i>Ανάληψη</h5>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
-                            <input type="number" step="0.01" min="0.01" name="amount" class="form-control" 
-                                   placeholder="Ποσό ανάληψης" required>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-check-lg"></i> Ανάληψη
-                            </button>
-                        </div>
-                    </form>
+                    <div class="rounded-3 p-3 mb-3" style="background:#fef2f2;">
+                        <form th:action="@{/accounts/{iban}/withdraw(iban=${account.iban})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <label class="form-label" style="font-weight:600; color:#991b1b;">
+                                <i class="bi bi-arrow-up-circle me-1"></i>Ανάληψη
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                                <input type="number" step="0.01" min="0.01" name="amount" class="form-control"
+                                       placeholder="Ποσό ανάληψης" required>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-                    <hr>
-
-                    <form th:action="@{/accounts/{iban}/transfer(iban=${account.iban})}" method="post">
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                        <h5 class="text-primary"><i class="bi bi-arrow-left-right me-1"></i>Μεταφορά</h5>
-                        <div class="mb-2">
-                            <input type="text" name="toIban" class="form-control" placeholder="IBAN παραλήπτη" required>
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
-                            <input type="number" step="0.01" min="0.01" name="amount" class="form-control" placeholder="Ποσό μεταφοράς" required>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-check-lg"></i> Μεταφορά
-                            </button>
-                        </div>
-                    </form>
+                    <!-- Transfer Form -->
+                    <div class="rounded-3 p-3" style="background:#eef2ff;">
+                        <form th:action="@{/accounts/{iban}/transfer(iban=${account.iban})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <label class="form-label" style="font-weight:600; color:#3730a3;">
+                                <i class="bi bi-arrow-left-right me-1"></i>Μεταφορά
+                            </label>
+                            <div class="mb-2">
+                                <input type="text" name="toIban" class="form-control" placeholder="IBAN παραλήπτη" required>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                                <input type="number" step="0.01" min="0.01" name="amount" class="form-control" placeholder="Ποσό μεταφοράς" required>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0"><i class="bi bi-clock-history me-2"></i>Ιστορικό Κινήσεων</h4>
-        </div>
+    <!-- Transaction History -->
+    <div class="card mb-4" style="border:none;">
         <div class="card-body p-0">
-            <div class="p-3" th:if="${#lists.isEmpty(transactions)}">
-                <span class="text-muted">Δεν υπάρχουν κινήσεις.</span>
+            <div class="p-4 pb-2">
+                <h5 style="font-weight:600;">
+                    <i class="bi bi-clock-history me-2" style="color:#4f46e5;"></i>Ιστορικό Κινήσεων
+                </h5>
             </div>
-            <table class="table table-hover mb-0" th:unless="${#lists.isEmpty(transactions)}">
-                <thead>
-                <tr>
-                    <th>Ημ/νία</th>
-                    <th>Τύπος</th>
-                    <th class="text-end">Ποσό</th>
-                    <th>Αντισυμβαλλόμενος</th>
-                    <th class="text-end">Υπόλοιπο Μετά</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="t : ${transactions}">
-                    <td th:text="${t.createdAt}"></td>
-                    <td th:text="${t.type}"></td>
-                    <td class="text-end" th:text="${#numbers.formatDecimal(t.amount, 1, 2)} + ' €'"></td>
-                    <td th:text="${t.counterpartyIban}"></td>
-                    <td class="text-end" th:text="${#numbers.formatDecimal(t.balanceAfter, 1, 2)} + ' €'"></td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="px-4 pb-4" th:if="${#lists.isEmpty(transactions)}">
+                <div class="text-center py-4 rounded-3" style="background:#f8fafc;">
+                    <i class="bi bi-receipt text-muted" style="font-size:2rem;"></i>
+                    <p class="text-muted mt-2 mb-0">Δεν υπάρχουν κινήσεις.</p>
+                </div>
+            </div>
+            <div class="table-responsive" th:unless="${#lists.isEmpty(transactions)}">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>Ημ/νία</th>
+                        <th>Τύπος</th>
+                        <th class="text-end">Ποσό</th>
+                        <th>Αντισυμβαλλόμενος</th>
+                        <th class="text-end">Υπόλοιπο Μετά</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="t : ${transactions}">
+                        <td class="text-muted" th:text="${t.createdAt}"></td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${t.type.name() == 'DEPOSIT'} ? 'bg-success' : (${t.type.name() == 'WITHDRAWAL'} ? 'bg-danger' : 'bg-primary')"
+                                  th:text="${t.type}"></span>
+                        </td>
+                        <td class="text-end fw-bold" th:text="${#numbers.formatDecimal(t.amount, 1, 2)} + ' €'"></td>
+                        <td class="text-muted" th:text="${t.counterpartyIban} ?: '—'"></td>
+                        <td class="text-end" th:text="${#numbers.formatDecimal(t.balanceAfter, 1, 2)} + ' €'"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="mt-3">
-        <a th:href="@{/accounts}" class="btn btn-outline-secondary">
+    <div class="mb-3">
+        <a th:href="@{/accounts}" class="text-muted" style="text-decoration:none; font-size:0.9rem;">
             <i class="bi bi-arrow-left me-1"></i>Επιστροφή στη Λίστα
         </a>
     </div>
